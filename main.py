@@ -3,32 +3,38 @@ import json
 import os
 import sys
 
-from PySide6.QtCore import Qt, QDir
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
-    QMainWindow, QMessageBox,
+    QMainWindow,
+    QMessageBox,
 )
 
+from modules.isu_mainpanel import ISUMainPanel
 from modules.isu_toolbar import ISUToolBar
 
 
 class ISUtil(QMainWindow):
-    conf = None
-
     toolbar: ISUToolBar = None
+    panel: ISUMainPanel = None
 
     def __init__(self):
         super().__init__()
+        self.setContentsMargins(2, 2, 2, 2)
         self.init_ui()
         self.setWindowTitle('utility for Inno Setup Compiler')
 
     def init_ui(self):
+        # Toolbar
         self.toolbar = ISUToolBar()
+        self.addToolBar(Qt.TopToolBarArea, self.toolbar)
         self.toolbar.dirClicked.connect(self.button_dir_clicked)
         self.toolbar.playClicked.connect(self.button_play_clicked)
         self.toolbar.fileClicked.connect(self.button_file_clicked)
-        self.addToolBar(Qt.TopToolBarArea, self.toolbar)
+        # Main Panel
+        self.panel = ISUMainPanel()
+        self.setCentralWidget(self.panel)
 
     def button_dir_clicked(self):
         path_dir = QFileDialog.getExistingDirectory(
@@ -45,8 +51,8 @@ class ISUtil(QMainWindow):
             dir=os.environ['HOME'],
         )
         json_open = open(jsonfile[0], 'r')
-        self.conf = json.load(json_open)
-        print(self.conf)
+        conf = json.load(json_open)
+        self.panel.setContents(conf)
 
     def button_play_clicked(self):
         if self.toolbar.get_entry() is None:
@@ -55,18 +61,22 @@ class ISUtil(QMainWindow):
         self.generate_sections(dir_top)
 
     def generate_sections(self, dir_top):
+        conf = self.panel.getContents()
+        # Check all information is prepared to make iss file
+        if self.is_valid_information(conf) is False:
+            return
         list_output = list()
         # Setup section
-        self.generate_section_setup(dir_top, list_output)
+        self.generate_section_setup(dir_top, list_output, conf)
         # Files section
-        self.generate_section_files(dir_top, list_output)
+        self.generate_section_files(dir_top, list_output, conf)
         # Icons
-        self.generate_section_icons(list_output)
+        self.generate_section_icons(list_output, conf)
         # Output
         f = open(
             os.path.join(
                 os.path.dirname(dir_top),
-                '%s.iss' % self.conf['appname']
+                '%s.iss' % conf['appname']
             ),
             'w', encoding='shift_jis'
         )
@@ -79,15 +89,15 @@ class ISUtil(QMainWindow):
         msgBox.setText('completed!')
         msgBox.exec()
 
-    def generate_section_setup(self, dir_top, list_output):
+    def generate_section_setup(self, dir_top, list_output, conf):
         list_output.append('[Setup]')
-        list_output.append('AppName=%s' % self.conf['appname'])
-        list_output.append('AppVersion=%s' % self.conf['appver'])
+        list_output.append('AppName=%s' % conf['appname'])
+        list_output.append('AppVersion=%s' % conf['appver'])
         list_output.append('WizardStyle=modern')
         list_output.append(
-            'DefaultDirName={autopf}\\%s' % self.conf['appname']
+            'DefaultDirName={autopf}\\%s' % conf['appname']
         )
-        list_output.append('DefaultGroupName=%s' % self.conf['grpname'])
+        list_output.append('DefaultGroupName=%s' % conf['grpname'])
         list_output.append('Compression=lzma2')
         list_output.append('SolidCompression=yes')
         list_output.append(
@@ -98,14 +108,14 @@ class ISUtil(QMainWindow):
         )
         list_output.append(
             'OutputBaseFilename=%s_%s_setup_%s' % (
-                self.conf['appname'],
-                self.conf['appver'].replace('.', ''),
-                self.conf['build']
+                conf['appname'],
+                conf['appver'].replace('.', ''),
+                conf['build']
             )
         )
         list_output.append('PrivilegesRequired=lowest')
 
-    def generate_section_files(self, dir_top, list_output):
+    def generate_section_files(self, dir_top, list_output, conf):
         list_output.append('[Files]')
         files = [
             p.replace('%s/' % dir_top, '')
@@ -124,14 +134,50 @@ class ISUtil(QMainWindow):
             line = 'Source: "%s"; DestDir: "%s"' % (file_src, dir_dst)
             list_output.append(line)
 
-    def generate_section_icons(self, list_output):
+    def generate_section_icons(self, list_output, conf):
         list_output.append('[Icons]')
         list_output.append(
             'Name: "{group}\\%s"; Filename: "{app}\\%s.exe"' % (
-                self.conf['appname'],
-                self.conf['appname']
+                conf['appname'],
+                conf['appname']
             )
         )
+
+    def is_valid_information(self, conf):
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Warning)
+        # source directory
+        if len(self.toolbar.get_entry()) == 0:
+            msgBox.setText('no source directory!')
+            msgBox.exec()
+            return False
+        # source directory exists
+        if not os.path.exists(self.toolbar.get_entry()):
+            msgBox.setText('source directory does not exist!')
+            msgBox.exec()
+            return False
+        #
+        if len(conf['appname']) == 0:
+            msgBox.setText('no application name is provided!')
+            msgBox.exec()
+            return False
+        #
+        if len(conf['appver']) == 0:
+            msgBox.setText('no application version is provided!')
+            msgBox.exec()
+            return False
+        #
+        if len(conf['grpname']) == 0:
+            msgBox.setText('no group name is provided!')
+            msgBox.exec()
+            return False
+        #
+        if len(conf['build']) == 0:
+            msgBox.setText('no build number is provided!')
+            msgBox.exec()
+            return False
+
+        return True
 
 
 def main():
