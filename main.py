@@ -17,6 +17,8 @@ from modules.isu_toolbar import ISUToolBar
 
 
 class ISUtil(QMainWindow):
+    jsonfile: str = None
+
     def __init__(self):
         super().__init__()
         self.setContentsMargins(2, 2, 2, 2)
@@ -43,14 +45,15 @@ class ISUtil(QMainWindow):
         self.toolbar.set_entry(path_dir)
 
     def button_file_clicked(self):
-        jsonfile = QFileDialog.getOpenFileName(
+        selection = QFileDialog.getOpenFileName(
             parent=self,
             caption='Select JSON file',
             dir=os.environ['HOME'],
             filter='JSON Files (*.json)'
         )
-        json_open = open(jsonfile[0], 'r')
-        conf = json.load(json_open)
+        self.jsonfile = selection[0]
+        with open(self.jsonfile) as f:
+            conf = json.load(f)
         self.panel.setContents(conf)
 
     def button_play_clicked(self):
@@ -58,6 +61,15 @@ class ISUtil(QMainWindow):
             return
         dir_top = self.toolbar.get_entry()
         self.generate_sections(dir_top)
+
+    def closeEvent(self, event):
+        # update JSON file if loaded.
+        if self.jsonfile is not None:
+            info = self.panel.getContents()
+            with open(self.jsonfile, 'w') as f:
+                json.dump(info, f, indent=4)
+
+        event.accept()
 
     def generate_sections(self, dir_top):
         conf = self.panel.getContents()
