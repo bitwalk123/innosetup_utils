@@ -4,11 +4,12 @@ import os
 import sys
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
     QMainWindow,
-    QMessageBox,
+    QMessageBox, QStyle,
 )
 
 from modules.isu_mainpanel import ISUMainPanel
@@ -16,16 +17,13 @@ from modules.isu_toolbar import ISUToolBar
 
 
 class ISUtil(QMainWindow):
-    toolbar: ISUToolBar = None
-    panel: ISUMainPanel = None
-
     def __init__(self):
         super().__init__()
         self.setContentsMargins(2, 2, 2, 2)
-        self.init_ui()
         self.setWindowTitle('utility for Inno Setup Compiler')
-
-    def init_ui(self):
+        self.setWindowIcon(
+            QIcon(self.style().standardIcon(QStyle.SP_TitleBarMenuButton))
+        )
         # Toolbar
         self.toolbar = ISUToolBar()
         self.addToolBar(Qt.TopToolBarArea, self.toolbar)
@@ -49,6 +47,7 @@ class ISUtil(QMainWindow):
             parent=self,
             caption='Select JSON file',
             dir=os.environ['HOME'],
+            filter='JSON Files (*.json)'
         )
         json_open = open(jsonfile[0], 'r')
         conf = json.load(json_open)
