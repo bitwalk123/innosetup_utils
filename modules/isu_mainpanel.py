@@ -6,7 +6,6 @@ from PySide6.QtWidgets import (
 
 
 class ISUMainPanel(QWidget):
-
     def __init__(self):
         super().__init__()
         self.setContentsMargins(2, 2, 2, 2)
@@ -19,11 +18,13 @@ class ISUMainPanel(QWidget):
         self.entry_grpname = QLineEdit()
         label_build = QLabel('Installer Build')
         self.entry_build = QLineEdit()
-        #
+        label_license = QLabel('License File')
+        self.entry_license = QLineEdit()
+        # Layout
         layout = QGridLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
-        #
+        # place widgets on the layout
         layout.addWidget(label_appname, 0, 0)
         layout.addWidget(self.entry_appname, 0, 1)
         layout.addWidget(label_appver, 1, 0)
@@ -32,18 +33,26 @@ class ISUMainPanel(QWidget):
         layout.addWidget(self.entry_grpname, 2, 1)
         layout.addWidget(label_build, 3, 0)
         layout.addWidget(self.entry_build, 3, 1)
+        layout.addWidget(label_license, 4, 0)
+        layout.addWidget(self.entry_license, 4, 1)
 
-    def setContents(self, info: dict):
-        self.entry_appname.setText(info['appname'])
-        self.entry_appver.setText(info['appver'])
-        self.entry_grpname.setText(info['grpname'])
-        self.entry_build.setText(info['build'])
+    def setContents(self, conf: dict):
+        self.entry_appname.setText(conf['appname'])
+        self.entry_appver.setText(conf['appver'])
+        self.entry_grpname.setText(conf['grpname'])
+        self.entry_build.setText(conf['build'])
+        # License
+        if 'license' in conf.keys():
+            self.entry_license.setText(conf['license'])
 
     def getContents(self) -> dict:
-        info = {
+        conf = {
             'appname': self.entry_appname.text(),
             'appver': self.entry_appver.text(),
             'grpname': self.entry_grpname.text(),
             'build': self.entry_build.text(),
         }
-        return info
+        file_license = self.entry_license.text().strip()
+        if file_license is not None:
+            conf['license'] = file_license
+        return conf

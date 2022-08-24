@@ -65,9 +65,9 @@ class ISUtil(QMainWindow):
     def closeEvent(self, event):
         # update JSON file if loaded.
         if self.jsonfile is not None:
-            info = self.panel.getContents()
+            conf = self.panel.getContents()
             with open(self.jsonfile, 'w') as f:
-                json.dump(info, f, indent=4)
+                json.dump(conf, f, indent=4)
 
         event.accept()
 
@@ -125,6 +125,13 @@ class ISUtil(QMainWindow):
             )
         )
         list_output.append('PrivilegesRequired=lowest')
+        # License File
+        if 'license' in conf.keys():
+            text_license = conf['license']
+            list_output.append(
+                'LicenseFile=%s' % text_license.replace('/', '\\')
+            )
+
 
     def generate_section_files(self, dir_top, list_output, conf):
         list_output.append('[Files]')
