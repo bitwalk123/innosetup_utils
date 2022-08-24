@@ -17,7 +17,7 @@ from modules.isu_toolbar import ISUToolBar
 
 
 class ISUtil(QMainWindow):
-    jsonfile: str = None
+    jsonfile: str = ''
 
     def __init__(self):
         super().__init__()
@@ -52,9 +52,12 @@ class ISUtil(QMainWindow):
             filter='JSON Files (*.json)'
         )
         self.jsonfile = selection[0]
-        with open(self.jsonfile) as f:
-            conf = json.load(f)
-        self.panel.setContents(conf)
+        if os.path.exists(self.jsonfile):
+            with open(self.jsonfile) as f:
+                conf = json.load(f)
+            self.panel.setContents(conf)
+        else:
+            self.jsonfile = ''
 
     def button_play_clicked(self):
         if self.toolbar.get_entry() is None:
@@ -64,7 +67,7 @@ class ISUtil(QMainWindow):
 
     def closeEvent(self, event):
         # update JSON file if loaded.
-        if self.jsonfile is not None:
+        if len(self.jsonfile) > 0:
             conf = self.panel.getContents()
             with open(self.jsonfile, 'w') as f:
                 json.dump(conf, f, indent=4)
