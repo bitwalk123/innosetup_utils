@@ -9,7 +9,8 @@ from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
     QMainWindow,
-    QMessageBox, QStyle,
+    QMessageBox,
+    QStyle,
 )
 
 from modules.isu_mainpanel import ISUMainPanel
@@ -131,9 +132,10 @@ class ISUtil(QMainWindow):
         # License File
         if 'license' in conf.keys():
             text_license = conf['license']
-            list_output.append(
-                'LicenseFile=%s' % text_license.replace('/', '\\')
-            )
+            if len(text_license) > 0:
+                list_output.append(
+                    'LicenseFile=%s' % text_license.replace('/', '\\')
+                )
 
 
     def generate_section_files(self, dir_top, list_output, conf):
