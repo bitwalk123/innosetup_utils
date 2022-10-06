@@ -53,6 +53,6 @@ class ISUMainPanel(QWidget):
             'build': self.entry_build.text(),
         }
         file_license = self.entry_license.text().strip()
-        if file_license is not None:
+        if len(file_license) > 0:
             conf['license'] = file_license
         return conf
