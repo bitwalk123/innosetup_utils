@@ -167,10 +167,16 @@ class ISUtil(QMainWindow):
                 conf['appname']
             )
         )
+        list_output.append(
+            'Name: "{userdesktop}\%s"; Filename: "{app}\\%s.exe"; Tasks: desktopicon' % (
+                conf['appname'],
+                conf['appname']
+            )
+        )
 
     def generate_section_tasks(self, list_output, conf):
         list_output.append('[Tasks]')
-        list_output.append('Name: desktopicon; Description: "Create a &desktop icon"')
+        list_output.append('Name: desktopicon; Description: "Create a &desktop icon";')
 
     def is_valid_information(self, conf):
         msgBox = QMessageBox()
