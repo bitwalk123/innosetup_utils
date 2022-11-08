@@ -25,7 +25,7 @@ class ISUtil(QMainWindow):
         self.setContentsMargins(2, 2, 2, 2)
         self.setWindowTitle('utility for Inno Setup Compiler')
         self.setWindowIcon(
-            QIcon(self.style().standardIcon(QStyle.SP_TitleBarMenuButton))
+            QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMenuButton))
         )
         # Toolbar
         self.toolbar = ISUToolBar()
@@ -102,7 +102,7 @@ class ISUtil(QMainWindow):
         f.close()
         # completed message
         msgBox = QMessageBox()
-        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setIcon(QMessageBox.Icon.Information)
         msgBox.setText('completed!')
         msgBox.exec()
 
@@ -138,7 +138,6 @@ class ISUtil(QMainWindow):
                 list_output.append(
                     'LicenseFile=%s' % text_license.replace('/', '\\')
                 )
-
 
     def generate_section_files(self, dir_top, list_output, conf):
         list_output.append('[Files]')
@@ -180,7 +179,7 @@ class ISUtil(QMainWindow):
 
     def is_valid_information(self, conf):
         msgBox = QMessageBox()
-        msgBox.setIcon(QMessageBox.Warning)
+        msgBox.setIcon(QMessageBox.Icon.Warning)
         # source directory
         if len(self.toolbar.get_entry()) == 0:
             msgBox.setText('no source directory!')

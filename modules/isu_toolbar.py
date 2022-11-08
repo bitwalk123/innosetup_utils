@@ -25,7 +25,7 @@ class ISUToolBar(QToolBar):
         button_dir = QToolButton()
         button_dir.setToolButtonStyle(Qt.ToolButtonIconOnly)
         button_dir.setIcon(
-            QIcon(self.style().standardIcon(QStyle.SP_DirIcon))
+            QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DirIcon))
         )
         button_dir.setToolTip('select application root directory(folder).')
         button_dir.clicked.connect(self.dirClicked.emit)
@@ -34,7 +34,7 @@ class ISUToolBar(QToolBar):
         button_play = QToolButton()
         button_play.setToolButtonStyle(Qt.ToolButtonIconOnly)
         button_play.setIcon(
-            QIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
+            QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_MediaPlay))
         )
         button_play.setToolTip('start generating iss file for Inno Setup.')
         button_play.clicked.connect(self.playClicked.emit)
@@ -43,7 +43,7 @@ class ISUToolBar(QToolBar):
         button_file = QToolButton()
         button_file.setToolButtonStyle(Qt.ToolButtonIconOnly)
         button_file.setIcon(
-            QIcon(self.style().standardIcon(QStyle.SP_FileIcon))
+            QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileIcon))
         )
         button_file.setToolTip('load predefined contents in JSON format.')
         button_file.clicked.connect(self.fileClicked.emit)
