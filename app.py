@@ -141,7 +141,7 @@ class ISUtil(QMainWindow):
 
     def generate_section_files(self, dir_top, list_output, conf):
         list_output.append('[Files]')
-        old_ishidden = glob._ishidden
+        old_ishidden = glob._ishidden # need to find hidden files start with .
         glob._ishidden = lambda x: False
         files = [
             p.replace('%s/' % dir_top, '')
