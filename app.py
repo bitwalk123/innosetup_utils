@@ -141,11 +141,14 @@ class ISUtil(QMainWindow):
 
     def generate_section_files(self, dir_top, list_output, conf):
         list_output.append('[Files]')
+        old_ishidden = glob._ishidden
+        glob._ishidden = lambda x: False
         files = [
             p.replace('%s/' % dir_top, '')
             for p in glob.glob('%s/**' % dir_top, recursive=True)
             if os.path.isfile(p)
         ]
+        glob._ishidden = old_ishidden
         # ---------------------------------------------------------------------
         for file in files:
             file_src = file.replace('/', '\\')
