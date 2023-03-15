@@ -164,17 +164,14 @@ class ISUtil(QMainWindow):
         old_ishidden = glob._ishidden  # need to find hidden files start with .
         glob._ishidden = lambda x: False
         if platform.system() == 'Windows':
-            files = [
-                p.replace('%s\\' % dir_top, '')
-                for p in glob.glob('%s/**' % dir_top, recursive=True)
-                if os.path.isfile(p)
-            ]
+            body = '%s\\'
         else:
-            files = [
-                p.replace('%s/' % dir_top, '')
-                for p in glob.glob('%s/**' % dir_top, recursive=True)
-                if os.path.isfile(p)
-            ]
+            body = '%s/'
+        files = [
+            p.replace(body % dir_top, '')
+            for p in glob.glob('%s/**' % dir_top, recursive=True)
+            if os.path.isfile(p)
+        ]
         glob._ishidden = old_ishidden
         # ---------------------------------------------------------------------
         for file in files:
