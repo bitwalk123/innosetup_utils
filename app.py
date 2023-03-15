@@ -1,7 +1,9 @@
 import glob
 import json
 import os
+import platform
 import sys
+from os.path import expanduser
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
@@ -38,18 +40,22 @@ class ISUtil(QMainWindow):
         self.setCentralWidget(self.panel)
 
     def button_dir_clicked(self):
+        home_dir = self.get_home_dir()
+
         path_dir = QFileDialog.getExistingDirectory(
             parent=self,
             caption='Select Folder',
-            dir=os.environ['HOME'],
+            dir=home_dir,
         )
         self.toolbar.set_entry(path_dir)
 
     def button_file_clicked(self):
+        home_dir = self.get_home_dir()
+
         selection = QFileDialog.getOpenFileName(
             parent=self,
             caption='Select JSON file',
-            dir=os.environ['HOME'],
+            dir=home_dir,
             filter='JSON Files (*.json)'
         )
         self.jsonfile = selection[0]
@@ -64,6 +70,9 @@ class ISUtil(QMainWindow):
         if self.toolbar.get_entry() is None:
             return
         dir_top = self.toolbar.get_entry()
+        if platform.system() == 'Windows':
+            dir_top = dir_top.replace('/', '\\')
+            print(dir_top)
         self.generate_sections(dir_top)
 
     def closeEvent(self, event):
@@ -117,12 +126,22 @@ class ISUtil(QMainWindow):
         list_output.append('DefaultGroupName=%s' % conf['grpname'])
         list_output.append('Compression=lzma2')
         list_output.append('SolidCompression=yes')
+
+        # Need to check platform, Windows or Wine on Linux
+        if platform.system() == 'Windows':
+            source_dir = 'SourceDir=%s'
+            output_dir = 'OutputDir=%s'
+        else:
+            source_dir = 'SourceDir=Z:%s'
+            output_dir = 'OutputDir=Z:%s'
+
         list_output.append(
-            'SourceDir=Z:%s' % dir_top.replace('/', '\\')
+            source_dir % dir_top.replace('/', '\\')
         )
         list_output.append(
-            'OutputDir=Z:%s' % os.path.dirname(dir_top).replace('/', '\\')
+            output_dir % os.path.dirname(dir_top).replace('/', '\\')
         )
+
         list_output.append(
             'OutputBaseFilename=%s_%s_setup_%s' % (
                 conf['appname'],
@@ -144,11 +163,18 @@ class ISUtil(QMainWindow):
         list_output.append('[Files]')
         old_ishidden = glob._ishidden  # need to find hidden files start with .
         glob._ishidden = lambda x: False
-        files = [
-            p.replace('%s/' % dir_top, '')
-            for p in glob.glob('%s/**' % dir_top, recursive=True)
-            if os.path.isfile(p)
-        ]
+        if platform.system() == 'Windows':
+            files = [
+                p.replace('%s\\' % dir_top, '')
+                for p in glob.glob('%s/**' % dir_top, recursive=True)
+                if os.path.isfile(p)
+            ]
+        else:
+            files = [
+                p.replace('%s/' % dir_top, '')
+                for p in glob.glob('%s/**' % dir_top, recursive=True)
+                if os.path.isfile(p)
+            ]
         glob._ishidden = old_ishidden
         # ---------------------------------------------------------------------
         for file in files:
@@ -216,6 +242,14 @@ class ISUtil(QMainWindow):
             return False
 
         return True
+
+    def get_home_dir(self):
+        # Need to check platform, Windows or Wine on Linux
+        if platform.system() == 'Windows':
+            home_dir = expanduser('~')
+        else:
+            home_dir = os.environ['HOME']
+        return home_dir
 
 
 def main():
