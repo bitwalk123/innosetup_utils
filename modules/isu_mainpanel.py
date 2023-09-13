@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import (
+    QGridLayout,
     QLabel,
     QLineEdit,
-    QWidget, QGridLayout,
+    QWidget,
 )
 
 
@@ -9,7 +10,8 @@ class ISUMainPanel(QWidget):
     def __init__(self):
         super().__init__()
         self.setContentsMargins(2, 2, 2, 2)
-        #
+
+        # Label and Entry
         label_appname = QLabel('Application Name')
         self.entry_appname = QLineEdit()
         label_appver = QLabel('Application Version')
@@ -20,11 +22,13 @@ class ISUMainPanel(QWidget):
         self.entry_build = QLineEdit()
         label_license = QLabel('License File')
         self.entry_license = QLineEdit()
+
         # Layout
         layout = QGridLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
-        # place widgets on the layout
+
+        # Place widgets on the layout
         layout.addWidget(label_appname, 0, 0)
         layout.addWidget(self.entry_appname, 0, 1)
         layout.addWidget(label_appver, 1, 0)

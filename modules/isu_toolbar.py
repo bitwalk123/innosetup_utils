@@ -9,6 +9,14 @@ from PySide6.QtWidgets import (
 )
 
 
+class ToolButtonIcon(QToolButton):
+    def __init__(self, name_icon: str):
+        super().__init__()
+        self.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        icon_std = getattr(QStyle.StandardPixmap, name_icon)
+        self.setIcon(QIcon(self.style().standardIcon(icon_std)))
+
+
 class ISUToolBar(QToolBar):
     dirClicked = Signal()
     playClicked = Signal()
@@ -18,34 +26,26 @@ class ISUToolBar(QToolBar):
         super().__init__()
         label_dir = QLabel('base directory')
         self.addWidget(label_dir)
+
         # Entry
         self.entry_dir = QLineEdit()
         self.addWidget(self.entry_dir)
+
         # Dir button
-        button_dir = QToolButton()
-        button_dir.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        button_dir.setIcon(
-            QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_DirIcon))
-        )
-        button_dir.setToolTip('select application root directory(folder).')
+        button_dir = ToolButtonIcon('SP_DirIcon')
+        button_dir.setToolTip('Select application root directory(folder).')
         button_dir.clicked.connect(self.dirClicked.emit)
         self.addWidget(button_dir)
+
         # Play button
-        button_play = QToolButton()
-        button_play.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        button_play.setIcon(
-            QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_MediaPlay))
-        )
-        button_play.setToolTip('start generating iss file for Inno Setup.')
+        button_play = ToolButtonIcon('SP_MediaPlay')
+        button_play.setToolTip('Start generating iss file for Inno Setup.')
         button_play.clicked.connect(self.playClicked.emit)
         self.addWidget(button_play)
+
         # File button
-        button_file = QToolButton()
-        button_file.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        button_file.setIcon(
-            QIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileIcon))
-        )
-        button_file.setToolTip('load predefined contents in JSON format.')
+        button_file = ToolButtonIcon('SP_FileIcon')
+        button_file.setToolTip('Load predefined contents in JSON format.')
         button_file.clicked.connect(self.fileClicked.emit)
         self.addWidget(button_file)
 
