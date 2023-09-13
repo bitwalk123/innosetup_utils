@@ -15,33 +15,33 @@ class ISUToolBar(ToolBar):
 
     def __init__(self):
         super().__init__()
-        label_dir = Label('base directory')
-        self.addWidget(label_dir)
+        lab_dir = Label('base directory')
+        self.addWidget(lab_dir)
 
         # Entry
-        self.entry_dir = Entry()
-        self.addWidget(self.entry_dir)
+        self.ent_dir = Entry()
+        self.addWidget(self.ent_dir)
 
         # Dir button
-        button_dir = ToolButtonIcon('SP_DirIcon')
-        button_dir.setToolTip('Select application root directory(folder).')
-        button_dir.clicked.connect(self.dirClicked.emit)
-        self.addWidget(button_dir)
+        but_dir = ToolButtonIcon('SP_DirIcon')
+        but_dir.setToolTip('Select application root directory(folder).')
+        but_dir.clicked.connect(self.dirClicked.emit)
+        self.addWidget(but_dir)
 
         # Play button
-        button_play = ToolButtonIcon('SP_MediaPlay')
-        button_play.setToolTip('Start generating iss file for Inno Setup.')
-        button_play.clicked.connect(self.playClicked.emit)
-        self.addWidget(button_play)
+        but_play = ToolButtonIcon('SP_MediaPlay')
+        but_play.setToolTip('Start generating iss file for Inno Setup.')
+        but_play.clicked.connect(self.playClicked.emit)
+        self.addWidget(but_play)
 
         # File button
-        button_file = ToolButtonIcon('SP_FileIcon')
-        button_file.setToolTip('Load predefined contents in JSON format.')
-        button_file.clicked.connect(self.fileClicked.emit)
-        self.addWidget(button_file)
+        but_file = ToolButtonIcon('SP_FileIcon')
+        but_file.setToolTip('Load predefined contents in JSON format.')
+        but_file.clicked.connect(self.fileClicked.emit)
+        self.addWidget(but_file)
 
     def get_entry(self) -> str:
-        return self.entry_dir.text()
+        return self.ent_dir.text()
 
     def set_entry(self, path: str):
-        self.entry_dir.setText(path)
+        self.ent_dir.setText(path)
