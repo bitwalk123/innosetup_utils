@@ -76,7 +76,10 @@ class ISUtil(QMainWindow):
         self.generate_sections(dir_top)
 
     def closeEvent(self, event):
-        # update JSON file if loaded.
+        """Update JSON file if loaded.
+
+        :param event:
+        """
         if len(self.jsonfile) > 0:
             conf = self.panel.getContents()
             with open(self.jsonfile, 'w') as f:
