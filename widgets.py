@@ -45,4 +45,7 @@ class Widget(QWidget):
     def __init(self):
         super().__init__()
         self.setContentsMargins(2, 2, 2, 2)
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed
+        )

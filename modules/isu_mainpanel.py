@@ -7,6 +7,8 @@ from widgets import (
 
 
 class ISUMainPanel(Widget):
+    """Inno Setup Utility Main Panel
+    """
     def __init__(self):
         super().__init__()
 

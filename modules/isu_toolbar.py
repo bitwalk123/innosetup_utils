@@ -9,6 +9,8 @@ from widgets import (
 
 
 class ISUToolBar(ToolBar):
+    """Inno Setup Utility Tool Bar
+    """
     dirClicked = Signal()
     playClicked = Signal()
     fileClicked = Signal()
