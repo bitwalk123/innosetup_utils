@@ -1,34 +1,25 @@
-from PySide6.QtCore import Signal, Qt
-from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import (
-    QLabel,
-    QLineEdit,
-    QStyle,
-    QToolBar,
-    QToolButton,
+from PySide6.QtCore import Signal
+
+from widgets import (
+    Entry,
+    Label,
+    ToolBar,
+    ToolButtonIcon,
 )
 
 
-class ToolButtonIcon(QToolButton):
-    def __init__(self, name_icon: str):
-        super().__init__()
-        self.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        icon_std = getattr(QStyle.StandardPixmap, name_icon)
-        self.setIcon(QIcon(self.style().standardIcon(icon_std)))
-
-
-class ISUToolBar(QToolBar):
+class ISUToolBar(ToolBar):
     dirClicked = Signal()
     playClicked = Signal()
     fileClicked = Signal()
 
     def __init__(self):
         super().__init__()
-        label_dir = QLabel('base directory')
+        label_dir = Label('base directory')
         self.addWidget(label_dir)
 
         # Entry
-        self.entry_dir = QLineEdit()
+        self.entry_dir = Entry()
         self.addWidget(self.entry_dir)
 
         # Dir button

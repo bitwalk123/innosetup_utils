@@ -1,31 +1,29 @@
-from PySide6.QtWidgets import (
-    QGridLayout,
-    QLabel,
-    QLineEdit,
-    QWidget,
+from widgets import (
+    Entry,
+    GridLayout,
+    Label,
+    Widget,
 )
 
 
-class ISUMainPanel(QWidget):
+class ISUMainPanel(Widget):
     def __init__(self):
         super().__init__()
-        self.setContentsMargins(2, 2, 2, 2)
 
         # Label and Entry
-        label_appname = QLabel('Application Name')
-        self.entry_appname = QLineEdit()
-        label_appver = QLabel('Application Version')
-        self.entry_appver = QLineEdit()
-        label_grpname = QLabel('Application Group')
-        self.entry_grpname = QLineEdit()
-        label_build = QLabel('Installer Build')
-        self.entry_build = QLineEdit()
-        label_license = QLabel('License File')
-        self.entry_license = QLineEdit()
+        label_appname = Label('Application Name')
+        self.entry_appname = Entry()
+        label_appver = Label('Application Version')
+        self.entry_appver = Entry()
+        label_grpname = Label('Application Group')
+        self.entry_grpname = Entry()
+        label_build = Label('Installer Build')
+        self.entry_build = Entry()
+        label_license = Label('License File')
+        self.entry_license = Entry()
 
         # Layout
-        layout = QGridLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout = GridLayout()
         self.setLayout(layout)
 
         # Place widgets on the layout

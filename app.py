@@ -38,6 +38,9 @@ class ISUtil(QMainWindow):
         # Main Panel
         self.panel = ISUMainPanel()
         self.setCentralWidget(self.panel)
+        # Fix size of window
+        self.setMinimumWidth(self.sizeHint().width())
+        self.setFixedHeight(self.sizeHint().height())
 
     def button_dir_clicked(self):
         home_dir = self.get_home_dir()
