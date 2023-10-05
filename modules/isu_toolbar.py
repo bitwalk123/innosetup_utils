@@ -1,6 +1,6 @@
 from PySide6.QtCore import Signal
 
-from widgets import (
+from _widgets import (
     Entry,
     Label,
     ToolBar,

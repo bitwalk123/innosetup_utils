@@ -1,4 +1,4 @@
-from widgets import (
+from _widgets import (
     Entry,
     GridLayout,
     Label,
